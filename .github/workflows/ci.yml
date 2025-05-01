@@ -9,8 +9,11 @@ jobs:
         with: {python-version: '3.11'}
       - name: Install package
         run: |
-          pip install -e .
+          python -m pip install --upgrade pip
+          pip install -e .[test]
           pip install -r requirements.txt
       - run: ruff check src tests --quiet
-      - run: pytest -n auto --cov=src/guardian
+      - name: Run tests
+        run: |
+          PYTHONPATH=$PYTHONPATH:${{ github.workspace }} pytest -n auto --cov=src/guardian tests/
       - run: behave -f progress
