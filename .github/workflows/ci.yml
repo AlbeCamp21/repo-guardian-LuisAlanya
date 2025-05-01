@@ -15,5 +15,5 @@ jobs:
       - run: ruff check src tests --quiet
       - name: Run tests
         run: |
-          PYTHONPATH=$PYTHONPATH:${{ github.workspace }} pytest -n auto --cov=src/guardian tests/
+          PYTHONPATH=$PYTHONPATH:${{ github.workspace }} pytest -n auto --cov=src/guardian tests/ -v
       - run: behave -f progress
