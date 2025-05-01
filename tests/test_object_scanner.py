@@ -1,6 +1,6 @@
 import pytest
 from pathlib import Path
-from src.guardian.object_scanner import read_loose, GitObject
+from src.guardian.object_scanner import read_loose
 import zlib
 
 @pytest.fixture
