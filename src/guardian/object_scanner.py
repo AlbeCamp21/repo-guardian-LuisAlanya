@@ -12,10 +12,7 @@ class GitObject:
 def read_loose(path: Path) -> Optional[GitObject]:
     """
     Lee un objeto Git loose y valida su integridad.
-    Args:
-        path: Ruta al objeto (ej: .git/objects/ab/c123).
-    Returns:
-        GitObject si es válido, None si está corrupto.
+    Tipos válidos: 'blob', 'commit', 'tree', 'tag'.
     """
     if not path.exists():
         return None
@@ -25,16 +22,20 @@ def read_loose(path: Path) -> Optional[GitObject]:
             raw_data = f.read()
         decompressed = zlib.decompress(raw_data)
     except (zlib.error, FileNotFoundError):
-        return None  # Objeto corrupto o inexistente
+        return None
 
     header, _, content = decompressed.partition(b"\x00")
     try:
         type, size_str = header.decode().split()
         size = int(size_str)
     except (ValueError, UnicodeDecodeError):
-        return None  # Cabecera mal formada
+        return None
+
+    # Validar tipos Git conocidos
+    if type not in {"blob", "commit", "tree", "tag"}:  # <--- Nueva validación
+        return None
 
     if size != len(content):
-        return None  # Tamaño incongruente
+        return None
 
     return GitObject(type, content, sha=path.stem)
