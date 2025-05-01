@@ -25,10 +25,9 @@ def test_read_loose_invalid_path():
     """Caso 2: Ruta inválida."""
     assert read_loose(Path("/fake/path")) is None
 
-def test_read_loose_corrupt_data(tmp_path: Path):
-    """Caso 3: Datos corruptos (zlib error)."""
-    corrupt_path = tmp_path / "corrupt"
-    corrupt_path.write_bytes(b"invalid-data")
+def test_read_loose_corrupt_data():
+    """Caso 3: Objeto corrupto."""
+    corrupt_path = Path("fixtures/corrupt-blob.git/objects/ab/c123")
     assert read_loose(corrupt_path) is None
 
 def test_read_loose_unknown_type(tmp_path: Path):
